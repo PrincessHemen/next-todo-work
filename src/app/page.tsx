@@ -12,32 +12,56 @@ export default function Home() {
     description: "",
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/api");  // This calls the GET handler in route.ts
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-  
-    fetchData();
-  }, []);  // The empty dependency array ensures this runs only once when the component mounts
-  
+  const [todos, setTodos] = useState([]);
 
+  // Fetch todos from the database
+  const fetchTodos = async () => {
+    try {
+      const response = await axios.get("/api");
+      setTodos(response.data.todos);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
+  const deleteTodo = async (id: string) => {
+    try {
+      const response = await axios.delete('/api', {
+        params: {
+          mongoId: id,
+        }
+      });
+      if (response.status === 200) {
+        await fetchTodos(); // Refresh the todos after deleting one
+        toast.success('ToDo Deleted');
+      }
+    } catch (error) {
+      toast.error('An error occurred while deleting the ToDo');
+    }
+  };
+
+  // Handle input changes
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const name = e.target.name;
     const value = e.target.value;
     setFormData({ ...formData, [name]: value });
-    console.log(formData);
   };
 
+  // Handle form submission
   const onSubmitHandle = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Your form submission logic here, e.g., axios.post(...)
-      toast.success("Task created successfully");
+      const response = await axios.post('/api', formData);
+      toast.success(response.data.msg);
+      setFormData({
+        title: "",
+        description: "",
+      });
+      await fetchTodos(); // Fetch the todos again to update the list with the new task
     } catch (error) {
       toast.error("An error occurred");
     }
@@ -45,7 +69,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
-      <ToastContainer theme="dark" /> 
+      <ToastContainer theme="dark" />
       <div className="flex flex-col items-center justify-center pt-10">
         <form
           className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mb-12"
@@ -87,14 +111,14 @@ export default function Home() {
           </div>
           <button
             type="submit"
-            onChange={onSubmitHandle}
             className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
           >
             Add Task
           </button>
         </form>
 
-        <Todo />
+        {/* Pass the deleteTodo function to the Todo component */}
+        <Todo todos={todos} onDelete={deleteTodo} />
       </div>
     </div>
   );
