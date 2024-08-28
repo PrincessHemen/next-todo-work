@@ -7,6 +7,8 @@ import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-spinners';
 
+import { FaTelegramPlane, FaGithub, FaLinkedin } from 'react-icons/fa';
+
 export default function Home() {
   const [formData, setFormData] = useState({
     title: "",
@@ -47,6 +49,23 @@ export default function Home() {
       toast.error('An error occurred while deleting the ToDo');
     }
   };
+
+  const completeTodo = async (id: string) => {
+    try {
+      const response = await axios.put('/api', {}, {
+        params: {
+          mongoId: id,
+        }
+      });
+      if (response.status === 200) {
+        toast.success(response.data.msg);
+        fetchTodos(); // Refresh the todos after marking one as completed
+      }
+    } catch (error) {
+      toast.error('An error occurred while updating the ToDo');
+    }
+  };
+  
 
   // Handle input changes
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -122,8 +141,25 @@ export default function Home() {
         </form>
 
         {/* Pass the deleteTodo function and loading state to the Todo component */}
-        <Todo todos={todos} onDelete={deleteTodo} loading={loading} />
+        <Todo todos={todos} onDelete={deleteTodo} loading={loading} onComplete={completeTodo} />
       </div>
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-4 mt-12">
+        <div className="container mx-auto text-center">
+          <p className="mb-2">&copy; 2024 Hemen Princess</p>
+          <div className="flex justify-center gap-4">
+            <a href="https://t.me/p_d_hemen" target="_blank" rel="noopener noreferrer">
+              <FaTelegramPlane className="text-xl hover:text-gray-400 transition duration-300" />
+            </a>
+            <a href="https://github.com/PrincessHemen" target="_blank" rel="noopener noreferrer">
+              <FaGithub className="text-xl hover:text-gray-400 transition duration-300" />
+            </a>
+            <a href="https://www.linkedin.com/in/princess-hemen" target="_blank" rel="noopener noreferrer">
+              <FaLinkedin className="text-xl hover:text-gray-400 transition duration-300" />
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

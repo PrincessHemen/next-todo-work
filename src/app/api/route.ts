@@ -81,11 +81,15 @@ export async function PUT(request: NextRequest) {
             return NextResponse.json({ message: 'Missing MongoDB ID' }, { status: 400 });
         }
         
-        await TodoModel.findByIdAndUpdate(mongoId, {
+        const updatedTodo = await TodoModel.findByIdAndUpdate(mongoId, {
             $set: {
-                isCompleted: true,
+                status: 'Completed', // Update the status to 'Completed'
             }
         });
+
+        if (!updatedTodo) {
+            return NextResponse.json({ message: 'ToDo not found' }, { status: 404 });
+        }
 
         return NextResponse.json({ msg: "ToDo Completed" });
     } catch (error) {

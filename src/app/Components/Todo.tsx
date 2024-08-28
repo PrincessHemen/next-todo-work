@@ -1,4 +1,6 @@
-import React from 'react'; 
+'use client';
+
+import React from 'react';
 import { ClipLoader } from 'react-spinners'; // Importing the ClipLoader spinner for loading animation
 import Swal from 'sweetalert2'; // Importing SweetAlert2 for enhanced alert dialogs
 
@@ -14,11 +16,12 @@ interface TodoItem {
 interface TodoProps {
   todos: TodoItem[];
   onDelete: (id: string) => void;
+  onComplete: (id: string) => void;
   loading: boolean; // Prop to indicate loading state
 }
 
-// The Todo component that displays a list of todos and handles deletion
-const Todo: React.FC<TodoProps> = ({ todos, onDelete, loading }) => {
+// The Todo component that displays a list of todos and handles deletion and completion
+const Todo: React.FC<TodoProps> = ({ todos, onDelete, onComplete, loading }) => {
 
   // Function to handle the delete button click
   const handleDeleteClick = (id: string) => {
@@ -38,7 +41,30 @@ const Todo: React.FC<TodoProps> = ({ todos, onDelete, loading }) => {
           'Deleted!',
           'Your ToDo has been deleted.',
           'success'
-        )
+        );
+      }
+    });
+  };
+
+  // Function to handle the done button click
+  const handleDoneClick = (id: string) => {
+    // Display a SweetAlert2 confirmation dialog
+    Swal.fire({
+      title: 'Mark as Completed?',
+      text: "This task will be marked as done!",
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, mark as done!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onComplete(id); // Call the onComplete function if the user confirms
+        Swal.fire(
+          'Completed!',
+          'The task has been marked as completed.',
+          'success'
+        );
       }
     });
   };
@@ -76,7 +102,13 @@ const Todo: React.FC<TodoProps> = ({ todos, onDelete, loading }) => {
               </td>
               <td className="px-2 py-4 md:px-6">{todo.title}</td>
               <td className="px-2 py-4 md:px-6">{todo.description}</td>
-              <td className="px-2 py-4 md:px-6">{todo.status}</td>
+              <td className="px-2 py-4 md:px-6">
+                {todo.status === 'Completed' ? (
+                  <span className="text-green-600 font-semibold">Completed</span>
+                ) : (
+                  <span className="text-yellow-600 font-semibold">Pending</span>
+                )}
+              </td>
               <td className="px-2 py-4 flex gap-2 md:gap-4">
                 <button
                   className="bg-red-600 text-white px-2 py-1 rounded-lg hover:bg-red-700 transition duration-300 md:px-3"
@@ -84,9 +116,14 @@ const Todo: React.FC<TodoProps> = ({ todos, onDelete, loading }) => {
                 >
                   Delete
                 </button>
-                <button className="bg-green-600 text-white px-2 py-1 rounded-lg hover:bg-green-700 transition duration-300 md:px-3">
-                  Done
-                </button>
+                {todo.status !== 'Completed' && (
+                  <button 
+                    className="bg-green-600 text-white px-2 py-1 rounded-lg hover:bg-green-700 transition duration-300 md:px-3"
+                    onClick={() => handleDoneClick(todo._id)}
+                  >
+                    Done
+                  </button>
+                )}
               </td>
             </tr>
           ))}
