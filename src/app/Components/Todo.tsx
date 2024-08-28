@@ -1,5 +1,8 @@
-import React from 'react';
+import React from 'react'; 
+import { ClipLoader } from 'react-spinners'; // Importing the ClipLoader spinner for loading animation
+import Swal from 'sweetalert2'; // Importing SweetAlert2 for enhanced alert dialogs
 
+// Interface defining the structure of a Todo item
 interface TodoItem {
   _id: string;
   title: string;
@@ -7,18 +10,49 @@ interface TodoItem {
   status: string;
 }
 
+// Interface for the Todo component props
 interface TodoProps {
   todos: TodoItem[];
   onDelete: (id: string) => void;
+  loading: boolean; // Prop to indicate loading state
 }
 
-const Todo: React.FC<TodoProps> = ({ todos, onDelete }) => {
+// The Todo component that displays a list of todos and handles deletion
+const Todo: React.FC<TodoProps> = ({ todos, onDelete, loading }) => {
+
+  // Function to handle the delete button click
   const handleDeleteClick = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this task?')) {
-      onDelete(id);
-    }
+    // Display a SweetAlert2 confirmation dialog
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onDelete(id); // Call the onDelete function if the user confirms
+        Swal.fire(
+          'Deleted!',
+          'Your ToDo has been deleted.',
+          'success'
+        )
+      }
+    });
   };
 
+  // Display the loading spinner when loading state is true
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <ClipLoader size={50} color={"#123abc"} loading={loading} />
+      </div>
+    );
+  }
+
+  // Render the table of todos when loading is complete
   return (
     <div className="relative overflow-x-auto w-full max-w-4xl mb-12">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

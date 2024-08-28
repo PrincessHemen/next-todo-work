@@ -1,10 +1,11 @@
-"use client";
+"use client"
 
 import React, { useState, useEffect } from "react";
 import Todo from "./Components/Todo";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import 'react-spinners';
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ export default function Home() {
   });
 
   const [todos, setTodos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Fetch todos from the database
   const fetchTodos = async () => {
@@ -21,6 +23,8 @@ export default function Home() {
       setTodos(response.data.todos);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -117,8 +121,8 @@ export default function Home() {
           </button>
         </form>
 
-        {/* Pass the deleteTodo function to the Todo component */}
-        <Todo todos={todos} onDelete={deleteTodo} />
+        {/* Pass the deleteTodo function and loading state to the Todo component */}
+        <Todo todos={todos} onDelete={deleteTodo} loading={loading} />
       </div>
     </div>
   );
