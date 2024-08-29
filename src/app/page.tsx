@@ -10,7 +10,7 @@ import { auth } from "./lib/Firebase";
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-spinners';
 import { FaTelegramPlane, FaGithub, FaLinkedin } from 'react-icons/fa';
-import withAuth from "./components/WithAuth";
+import withAuth from "./Components/WithAuth";
 
 function Home() {
   const [formData, setFormData] = useState({
