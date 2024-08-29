@@ -24,7 +24,7 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center px-4">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-4 text-center">Contact Me</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">Contact Me Via Email</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Name</label>

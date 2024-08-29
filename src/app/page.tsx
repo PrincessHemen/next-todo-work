@@ -1,15 +1,18 @@
-"use client"
+// src/app/page.tsx
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Todo from "./Components/Todo";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./lib/firebase";
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-spinners';
-
 import { FaTelegramPlane, FaGithub, FaLinkedin } from 'react-icons/fa';
+import withAuth from "./components/withAuth";
 
-export default function Home() {
+function Home() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -17,6 +20,8 @@ export default function Home() {
 
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
+  // State to hold user info
+  const [user, setUser] = useState<any>(null); 
 
   // Fetch todos from the database
   const fetchTodos = async () => {
@@ -32,6 +37,14 @@ export default function Home() {
 
   useEffect(() => {
     fetchTodos();
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user); // Set the authenticated user's info
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const deleteTodo = async (id: string) => {
@@ -65,7 +78,6 @@ export default function Home() {
       toast.error('An error occurred while updating the ToDo');
     }
   };
-  
 
   // Handle input changes
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -94,6 +106,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
       <ToastContainer theme="dark" />
       <div className="flex flex-col items-center justify-center pt-10">
+        {user && <h1 className="text-3xl font-bold mb-6">Welcome, {user.displayName}!</h1>}
         <form
           className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mb-12"
           onSubmit={onSubmitHandle}
@@ -163,3 +176,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default withAuth(Home);
