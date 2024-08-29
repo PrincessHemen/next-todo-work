@@ -6,11 +6,11 @@ import Todo from "./Components/Todo";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./lib/firebase";
+import { auth } from "./lib/Firebase";
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-spinners';
 import { FaTelegramPlane, FaGithub, FaLinkedin } from 'react-icons/fa';
-import withAuth from "./components/withAuth";
+import withAuth from "./components/WithAuth";
 
 function Home() {
   const [formData, setFormData] = useState({

@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "./../lib/firebase";
+import { auth, googleProvider } from "./../lib/Firebase";
 import { useRouter } from "next/navigation";  // Use `next/navigation` instead of `next/router`
 
 export default function Login() {

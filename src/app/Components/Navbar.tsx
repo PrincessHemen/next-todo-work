@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../lib/firebase';
+import { auth } from '../lib/Firebase';
 
 const Navbar = () => {
   const [user, setUser] = useState<any>(null);

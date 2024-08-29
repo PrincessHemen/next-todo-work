@@ -1,10 +1,10 @@
-// src/app/components/withAuth.tsx
+// src/app/components/WithAuth.tsx
 "use client";
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../lib/firebase';
+import { auth } from '../lib/Firebase';
 
 const withAuth = (WrappedComponent: React.ComponentType) => {
   return function WithAuth(props: any) {
