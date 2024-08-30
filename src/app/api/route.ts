@@ -22,24 +22,32 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-    try {
-        await ConnectDB(); 
-        // Ensure this is called when you want to connect to MongoDB
-        const {title, description} = await request.json();
+  try {
+      await ConnectDB(); 
+      const { title, description, userId } = await request.json(); // Destructure userId
 
-        await TodoModel.create({title, description});
+      console.log('Received userId:', userId);
 
-        return NextResponse.json({ msg: 'ToDo Created' });
-    } catch (error) {
-        if (error instanceof Error) {
-            console.error('POST ToDo request error:', error.message);
-            return NextResponse.json({ message: 'Failed to connect to MongoDB', error: error.message }, { status: 500 });
-        } else {
-            console.error('Unexpected error posting ToDo:', error);
-            return NextResponse.json({ message: 'An unexpected error occurred', error: String(error) }, { status: 500 });
-        }
-    }
+      if (!userId) {
+          console.log('No userId provided');
+          return NextResponse.json({ message: 'userId is required' }, { status: 400 });
+      }
+
+      await TodoModel.create({ title, description, userId }); // Pass userId when creating a new Todo
+
+      return NextResponse.json({ msg: 'ToDo Created' });
+  } catch (error) {
+      if (error instanceof Error) {
+          console.error('POST ToDo request error:', error.message);
+          return NextResponse.json({ message: 'Failed to connect to MongoDB', error: error.message }, { status: 500 });
+      } else {
+          console.error('Unexpected error posting ToDo:', error);
+          return NextResponse.json({ message: 'An unexpected error occurred', error: String(error) }, { status: 500 });
+      }
+  }
 }
+
+
 
 export async function DELETE(request: NextRequest) { // Change Request to NextRequest
     try {

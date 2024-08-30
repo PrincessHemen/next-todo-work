@@ -90,13 +90,16 @@ function Home() {
   const onSubmitHandle = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api', formData);
+      const response = await axios.post('/api', {
+        ...formData,
+        userId: user.uid, // Add userId to the request
+      });
       toast.success(response.data.msg);
       setFormData({
         title: "",
         description: "",
       });
-      await fetchTodos(); // Fetch the todos again to update the list with the new task
+      await fetchTodos(); 
     } catch (error) {
       toast.error("An error occurred");
     }

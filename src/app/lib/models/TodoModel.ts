@@ -14,7 +14,12 @@ const TodoSchema = new mongoose.Schema({
     enum: ['Pending', 'Completed'],
     default: 'Pending',
   },
-});
+  userId: {  // Add this field
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+}, { timestamps: true }); // This adds createdAt and updatedAt fields automatically
 
 const TodoModel = mongoose.models.Todo || mongoose.model('Todo', TodoSchema);
 
