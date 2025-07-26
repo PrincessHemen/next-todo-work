@@ -15,7 +15,7 @@ const TodoSchema = new mongoose.Schema({
     default: 'Pending',
   },
   userId: {  // Add this field
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: 'User',
     required: true,
   },

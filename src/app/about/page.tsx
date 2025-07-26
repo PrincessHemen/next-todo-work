@@ -13,7 +13,7 @@ export default function About() {
         />
         <h2 className="text-2xl font-bold mt-4">Princess Hemen</h2>
         <p className="mt-4 text-gray-600">
-          I am undergraduate student of Computer Science at Covenant University, Ota. I am an aspiring full stack software developer. I love soccer, music, and reading when not coding. Proudly Nigerian 🇳🇬
+          I am undergraduate student of Computer Science at Covenant University, Ota. I am a full stack software developer. I love soccer, music, and reading when not coding. Proudly Nigerian 🇳🇬
         </p>
       </div>
     </div>

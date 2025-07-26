@@ -9,7 +9,7 @@ interface TodoItem {
   title: string;
   description: string;
   status: string;
-  createdAt: string; // Add createdAt to the interface
+  createdAt: string; 
 }
 
 interface TodoProps {
